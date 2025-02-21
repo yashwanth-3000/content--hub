@@ -1,0 +1,56 @@
+{
+  "framework": "nextjs",
+  "functions": {
+    "pages/api/**/*.js": {
+      "maxDuration": 59
+    },
+    "src/app/api/**/*.js": {
+      "maxDuration": 59
+    },
+    "src/app/api/**/*.ts": {
+      "maxDuration": 59
+    },
+    "src/app/api/**/*.tsx": {
+      "maxDuration": 59
+    },
+    "src/app/api/**/route.js": {
+      "maxDuration": 59
+    },
+    "src/app/api/**/route.ts": {
+      "maxDuration": 59
+    },
+    "src/pages/**/*.js": {
+      "maxDuration": 59
+    },
+    "pages/chat/[id]/**/*": {
+      "maxDuration": 59
+    },
+    "src/pages/chat/[id]/**/*": {
+      "maxDuration": 59
+    },
+    "app/chat/[id]/**/*": {
+      "maxDuration": 59
+    },
+    "src/app/chat/**/*": {
+      "maxDuration": 59
+    },
+    "src/app/chat/[id]/page.tsx": {
+      "maxDuration": 59
+    },
+    "src/app/chat/page.tsx": {
+      "maxDuration": 59
+    },
+    "src/app/twitter/page.tsx": {
+      "maxDuration": 59
+    },
+    "src/app/generate-single-tweet/page.tsx": {
+      "maxDuration": 59
+    },
+    "src/app/generate-thread/page.tsx": {
+      "maxDuration": 59
+    },
+    "src/app/gallery/page.tsx": {
+      "maxDuration": 59
+    }
+  }
+}

@@ -1,0 +1,39 @@
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Node modules and package managers
+node_modules/
+bower_components/
+
+# Build output directories (adjust these to match your project)
+dist/
+build/
+
+# Environment variable files
+.env
+.env.local
+.env.*.local
+
+# Log files
+*.log
+logs/
+
+# Temporary files and caches
+tmp/
+*.tmp
+*.swp
+.cache/
+
+# IDE and editor folders/files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Composer vendor (for PHP projects)
+vendor/
+
+# Additional directories (uncomment if applicable)
+# public/assets/
+# output/
