@@ -19,6 +19,9 @@
     "src/app/api/**/route.ts": {
       "maxDuration": 59
     },
+    "src/app/api/ibm-profile-analysis/route.ts": {
+      "maxDuration": 59
+    },
     "src/pages/**/*.js": {
       "maxDuration": 59
     },
