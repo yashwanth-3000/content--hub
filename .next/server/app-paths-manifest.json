@@ -1,9 +1,9 @@
 {
+  "/analyze-twitter/page": "app/analyze-twitter/page.js",
+  "/social-media-timeline/page": "app/social-media-timeline/page.js",
   "/gallery/page": "app/gallery/page.js",
   "/page": "app/page.js",
   "/about/page": "app/about/page.js",
-  "/analyze-twitter/page": "app/analyze-twitter/page.js",
-  "/social-media-timeline/page": "app/social-media-timeline/page.js",
   "/_not-found/page": "app/_not-found/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js"
 }

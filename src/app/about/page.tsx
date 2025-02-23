@@ -115,18 +115,22 @@ const About = () => {
                   LLM Fine-Tuning with Our Dataset:
                 </h3>
                 <p>
-                  We initially planned to fine-tune a language model (deepseek...) using our meticulously prepared dataset—comprising diverse user interactions and integrated SEO strategies—to achieve even greater content nuance. However, persistent API errors forced us to pivot and rely on the existing Granite model.
+                  We initially planned to fine-tune a granintr language model using our meticulously prepared dataset—comprising diverse user interactions and integrated SEO strategies—to achieve even greater content nuance. However, persistent API errors forced us to pivot and rely on the existing Granite model.
                 </p>
-                <p>
-                  View our dataset and training photos{" "}
-                  <a
-                    href="/"
-                    style={{ color: "#FF4136", textDecoration: "underline" }}
+                <div style={{ marginTop: "1rem" }}>
+                  <video
+                    controls
+                    style={{
+                      width: "100%",
+                      maxWidth: "600px",
+                      borderRadius: "8px",
+                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+                    }}
                   >
-                    here
-                  </a>
-                  .
-                </p>
+                    <source src="https://i.imgur.com/opUDQGL.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
 
               <div style={{ marginBottom: "1.5rem" }}>
