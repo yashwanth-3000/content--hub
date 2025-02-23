@@ -352,7 +352,7 @@ ${additionalContext}
 
 Tweet Query:
 ${urlQuery}
-Output: A single, original tweet that incorporates the given context.
+Output: A single, original tweet that incorporates the given context without any exrtra text only give tweet text.
 `
       }
 

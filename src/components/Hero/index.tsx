@@ -185,19 +185,19 @@ const Hero = () => {
                     WebkitTextFillColor: "transparent",
                   }}
                 >
-                  AI-Powered
+                  Content-Hub
                 </span>
                 <br />
                 <span style={{ color: "#67e8f9" }}>
-                  Cross-Platform Content Generation
+                  Where AI meets Your Unique Voice.
                 </span>
               </h1>
 
               <p
                 className="glitch-tagline"
-                data-text="Empower your content strategy with intelligent automation."
+                data-text="Elevate your online presence with cross-platform, personalized content - created in seconds.."
               >
-                Empower your content strategy with intelligent automation.
+                Elevate your online presence with cross-platform, personalized content - created in seconds.
               </p>
 
               {/* CTA Section */}
@@ -298,7 +298,75 @@ const Hero = () => {
                   </span>
                 </motion.a>
               </div>
-              {/* Calendar button removed */}
+
+              {/* Powered By Section */}
+              <div className="mt-12 flex items-center gap-4 opacity-75">
+                <span style={{ color: "rgba(103,232,249,0.7)" }}>
+                  Powered by:
+                </span>
+                <div className="flex gap-4">
+                  <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-1">
+                    <a
+                      href="https://lablab.ai"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <span
+                        style={{
+                          background: "linear-gradient(45deg, #FF6B6B, #4ECDC4)",
+                          WebkitBackgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          fontWeight: "700",
+                        }}
+                      >
+                        Lablab.ai
+                      </span>
+                    </a>
+                  </motion.div>
+                  <span style={{ color: "rgba(103,232,249,0.3)" }}>|</span>
+                  <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-1">
+                    <a
+                      href="https://www.ibm.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <span
+                        style={{
+                          background: "linear-gradient(45deg, #00C4FF, #0051FF)",
+                          WebkitBackgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          fontWeight: "700",
+                        }}
+                      >
+                        IBM Granite
+                      </span>
+                    </a>
+                  </motion.div>
+                  <span style={{ color: "rgba(103,232,249,0.3)" }}>|</span>
+                  <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-1">
+                    <a
+                      href="https://agent.ai"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <span
+                        style={{
+                          background: "linear-gradient(45deg, #FF9A9E, #FAD0C4)",
+                          WebkitBackgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          fontWeight: "700",
+                        }}
+                      >
+                        Agent.ai
+                      </span>
+                    </a>
+                  </motion.div>
+                </div>
+              </div>
+              {/* End of Left Content */}
             </motion.div>
 
             {/* Right Preview */}

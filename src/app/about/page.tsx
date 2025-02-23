@@ -16,7 +16,14 @@ const About = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY]);
 
-  const background = useMotionTemplate`radial-gradient(800px at ${mouseX}px ${mouseY}px, rgba(103,232,249,0.1), rgba(103,232,249,0.05) 50%, transparent 80%)`;
+  const background = useMotionTemplate`
+    radial-gradient(
+      800px at ${mouseX}px ${mouseY}px, 
+      rgba(103,232,249,0.1), 
+      rgba(103,232,249,0.05) 50%, 
+      transparent 80%
+    )
+  `;
 
   return (
     <div
@@ -51,53 +58,13 @@ const About = () => {
           pointer-events: none;
           background-size: 100% 2px, 3px 100%;
         }
-        .glitch-tagline {
-          position: relative;
-          color: rgba(103,232,249,0.8);
-          font-size: 1.125rem;
-          margin-top: 0.5rem;
-          display: inline-block;
-        }
-        .glitch-tagline::before,
-        .glitch-tagline::after {
-          content: attr(data-text);
-          position: absolute;
-          top: 0;
-          left: 0;
-          opacity: 0.4;
-        }
-        .glitch-tagline::before {
-          left: 1px;
-          text-shadow: -1px 0 red;
-          clip: rect(10px, 9999px, 40px, 0);
-          animation: glitch-animation 2.5s infinite linear alternate-reverse;
-        }
-        .glitch-tagline::after {
-          left: -1px;
-          text-shadow: -1px 0 blue;
-          clip: rect(10px, 9999px, 40px, 0);
-          animation: glitch-animation2 3s infinite linear alternate-reverse;
-        }
-        @keyframes glitch-animation {
-          0% { clip: rect(10px, 9999px, 40px, 0); }
-          20% { clip: rect(12px, 9999px, 38px, 0); }
-          40% { clip: rect(10px, 9999px, 40px, 0); }
-          60% { clip: rect(11px, 9999px, 37px, 0); }
-          80% { clip: rect(10px, 9999px, 40px, 0); }
-          100% { clip: rect(10px, 9999px, 40px, 0); }
-        }
-        @keyframes glitch-animation2 {
-          0% { clip: rect(10px, 9999px, 40px, 0); }
-          20% { clip: rect(12px, 9999px, 38px, 0); }
-          40% { clip: rect(10px, 9999px, 40px, 0); }
-          60% { clip: rect(11px, 9999px, 37px, 0); }
-          80% { clip: rect(10px, 9999px, 40px, 0); }
-          100% { clip: rect(10px, 9999px, 40px, 0); }
-        }
       `}</style>
 
       <div className="crt-effect" style={{ minHeight: "100%" }}>
-        <motion.div className="absolute inset-0 opacity-20" style={{ background }} />
+        <motion.div
+          className="absolute inset-0 opacity-20"
+          style={{ background }}
+        />
 
         <div className="container mx-auto px-4 py-16 relative z-10">
           <motion.h1
@@ -111,82 +78,109 @@ const About = () => {
               marginBottom: "1rem",
             }}
           >
-            About This Project
+            Content Hub
           </motion.h1>
-          <motion.p
-            className="glitch-tagline"
-            data-text="Crafted with passion and precision."
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            style={{
-              fontSize: "1.125rem",
-              color: "rgba(103,232,249,0.8)",
-              marginBottom: "2rem",
-            }}
-          >
-            Crafted with passion and precision.
-          </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             style={{
-              display: "grid",
-              gap: "2rem",
               color: "#67e8f9",
               lineHeight: "1.6",
               fontSize: "1rem",
             }}
           >
-            <div>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: "700", marginBottom: "1rem" }}>
-                How We Did It
-              </h2>
+            {/* Introduction Section */}
+            <div style={{ marginBottom: "2rem" }}>
               <p>
-                Our project was built using cutting-edge AI technologies and a deep passion for design and
-                user experience. We integrated powerful libraries such as{" "}
-                <strong>Framer Motion</strong> for fluid animations and{" "}
-                <strong>Lucide Icons</strong> for modern, scalable iconography. Every component—from the interactive,
-                mouse-responsive background to the retro-inspired glitch text effects—was carefully designed to create an engaging digital experience.
+                Content Hub is an innovative platform dedicated to transforming social media engagement through the generation of personalized, SEO-optimized content. Our solution is built on advanced artificial intelligence, leveraging IBM’s Granite AI models and their robust APIs for inference. This integration allows us to deliver dynamic digital content that not only captures the unique voice of each user but also meets the stringent demands of today’s competitive digital landscape. By processing data from major social media platforms such as Twitter, LinkedIn, and Instagram, Content Hub converts raw user interactions into compelling narratives within seconds.
               </p>
             </div>
 
-            <div>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: "700", marginBottom: "1rem" }}>
-                What We Wanted to Include
+            {/* Challenges Section */}
+            <div style={{ marginBottom: "2rem" }}>
+              <h2
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "700",
+                  marginBottom: "1rem",
+                }}
+              >
+                What We Wanted to Create But Couldn't
               </h2>
-              <p>
-                Our vision was to combine functionality with striking aesthetics. We set out to include:
-              </p>
-              <ul style={{ listStyle: "disc", paddingLeft: "1.5rem", marginTop: "1rem" }}>
-                <li>Dynamic, mouse-reactive backgrounds for an immersive experience</li>
-                <li>Glitch text effects that add a retro-futuristic vibe</li>
-                <li>Smooth, responsive animations to guide user interaction</li>
-                <li>Modern iconography and a bold color palette to spark creativity</li>
-                <li>
-                  Integrated{" "}
+
+              <div style={{ marginBottom: "1.5rem" }}>
+                <h3 style={{ fontSize: "1.25rem", fontWeight: "600" }}>
+                  LLM Fine-Tuning with Our Dataset:
+                </h3>
+                <p>
+                  We initially planned to fine-tune a language model (deepseek...) using our meticulously prepared dataset—comprising diverse user interactions and integrated SEO strategies—to achieve even greater content nuance. However, persistent API errors forced us to pivot and rely on the existing Granite model.
+                </p>
+                <p>
+                  View our dataset and training photos{" "}
                   <a
                     href="/"
                     style={{ color: "#FF4136", textDecoration: "underline" }}
                   >
-                    Calendar Page
-                  </a>{" "}
-                  for scheduling and planning content.
-                </li>
-              </ul>
+                    here
+                  </a>
+                  .
+                </p>
+              </div>
+
+              <div style={{ marginBottom: "1.5rem" }}>
+                <h3 style={{ fontSize: "1.25rem", fontWeight: "600" }}>
+                  Social Content Calendar:
+                </h3>
+                <p>
+                  A key feature in our vision was a Social Content Calendar designed to assist users in planning and managing their posting schedules effectively. Unfortunately, the LLM exhibited a tendency to hallucinate, resulting in frequent JSON file errors, which rendered the integration of this feature into the website unfeasible.
+                </p>
+                <p>
+                  See our Social Content Calendar prototype{" "}
+                  <a
+                    href="/social-media-timeline"
+                    style={{ color: "#FF4136", textDecoration: "underline" }}
+                  >
+                    /social-media-timeline
+                  </a>
+                  .
+                </p>
+              </div>
+
+              <div>
+                <h3 style={{ fontSize: "1.25rem", fontWeight: "600" }}>
+                  Instagram Content Creation Module:
+                </h3>
+                <p>
+                  We also envisioned a dedicated module for Instagram content creation, tailored to the platform’s unique dynamics. Due to time constraints, this feature remains a future aspiration.
+                </p>
+              </div>
             </div>
 
+            {/* Future Insights Section */}
+            <div style={{ marginBottom: "2rem" }}>
+              <p>
+                Each of these challenges has provided valuable insights that will guide future iterations of Content Hub. We remain dedicated to expanding the platform’s capabilities and continuing our pursuit of excellence in AI-driven digital engagement.
+              </p>
+              <p>
+                At its core, Content Hub empowers users with actionable insights and analytics, enabling them to optimize their online presence and refine their digital communication strategies. Our platform exemplifies the potential of strategic AI integration, setting a new benchmark for efficiency and precision in digital marketing. With IBM’s Granite AI technology as our foundation, we ensure reliability and performance while pushing the boundaries of automated content creation. We have meticulously designed system prompts for each mode—Twitter tweet generation, threads generation, LinkedIn post generation, and our analysis models—to maximize output quality.
+              </p>
+            </div>
+
+            {/* Disclaimer Section */}
             <div>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: "700", marginBottom: "1rem" }}>
-                Our Vision
+              <h2
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "700",
+                  marginBottom: "1rem",
+                }}
+              >
+                Disclaimer:
               </h2>
               <p>
-                We believe in the fusion of creativity and technology to transform digital experiences.
-                By harnessing the power of AI-driven design and innovative development, our goal is to empower users
-                with tools that are as visually captivating as they are functionally robust. This project is a step toward
-                redefining content creation and inspiring a new wave of digital innovation.
+                Please note that the quality and accuracy of the content generated by Content Hub are entirely dependent on IBM’s Granite AI model. Although our system prompts and integrated SEO techniques are carefully crafted, their effectiveness is subject to the inherent limitations of the Granite model, which is built on an 8-billion-parameter architecture. In instances where our optimizations may not be perfectly aligned, the final output will rely solely on the capabilities of the Granite model.
               </p>
             </div>
           </motion.div>

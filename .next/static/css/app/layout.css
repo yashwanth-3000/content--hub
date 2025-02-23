@@ -1935,6 +1935,10 @@ input[type="radio"]:checked ~ .box .circle background{
   padding-top: 3rem;
   padding-bottom: 3rem;
 }
+.py-16{
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
 .py-2{
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -1966,10 +1970,6 @@ input[type="radio"]:checked ~ .box .circle background{
 .py-\[60px\]{
   padding-top: 60px;
   padding-bottom: 60px;
-}
-.py-16{
-  padding-top: 4rem;
-  padding-bottom: 4rem;
 }
 .pb-0{
   padding-bottom: 0px;
@@ -2369,11 +2369,11 @@ input[type="radio"]:checked ~ .box .circle background{
 .opacity-20{
   opacity: 0.2;
 }
-.opacity-75{
-  opacity: 0.75;
-}
 .opacity-90{
   opacity: 0.9;
+}
+.opacity-75{
+  opacity: 0.75;
 }
 .shadow{
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
