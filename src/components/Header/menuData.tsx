@@ -10,7 +10,7 @@ const menuData: Menu[] = [
   {
     id: 2,
     title: "Github",
-    path: "https://github.com/yashwanth-3000/tweet-synth",
+    path: "https://github.com/yashwanth-3000/content--hub",
     newTab: true,
   },
   {
@@ -28,7 +28,7 @@ const menuData: Menu[] = [
   {
     id: 5,
     title: "Lablab.ai",
-    path: "https://dev.to/yashwanth_krishna_6b86250/tweetsynth-ai-agents-powered-tweets-that-sound-like-you-3lfg",
+    path: "https://lablab.ai/event/generative-ai-hackathon-with-ibm-granite/content-hub/content-hub",
     newTab: true,
   },
 ];
