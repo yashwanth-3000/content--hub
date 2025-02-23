@@ -21,6 +21,12 @@ const menuData: Menu[] = [
   },
   {
     id: 3,
+    title: "About",
+    path: "/about",
+    newTab: false,
+  },
+  {
+    id: 5,
     title: "Lablab.ai",
     path: "https://dev.to/yashwanth_krishna_6b86250/tweetsynth-ai-agents-powered-tweets-that-sound-like-you-3lfg",
     newTab: true,

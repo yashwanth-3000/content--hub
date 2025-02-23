@@ -1,4 +1,4 @@
-// File: /Users/sreedharpavushetty/Desktop/Content--Hub/src/app/choose-post-type/page.tsx
+// File: /Users/sreedharpavushetty/Desktop/content--hub/src/app/choose-post-type/page.tsx
 import * as entry from '../../../../src/app/choose-post-type/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

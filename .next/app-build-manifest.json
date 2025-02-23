@@ -31,15 +31,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
     ],
-    "/choose-analysing-profile/page": [
+    "/about/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/choose-analysing-profile/page.js"
-    ],
-    "/generate-thread/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/generate-thread/page.js"
+      "static/chunks/app/about/page.js"
     ]
   }
 }

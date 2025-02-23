@@ -1,4 +1,4 @@
-// File: /Users/sreedharpavushetty/Desktop/Content--Hub/src/app/api/ibm-profile-analysis/route.ts
+// File: /Users/sreedharpavushetty/Desktop/content--hub/src/app/api/ibm-profile-analysis/route.ts
 import * as entry from '../../../../../src/app/api/ibm-profile-analysis/route.js'
 import type { NextRequest } from 'next/server.js'
 

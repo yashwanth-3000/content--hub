@@ -33,10 +33,85 @@ const dummyTweets = [
   "// Your generated thread will appear here..."
 ]
 
+// Helper function to call IBM Profile Analysis API (from your single tweet generator)
+const callIBMProfileAnalysis = async (
+  ibmInput: string,
+  addTerminalLine: (text: string, type?: TerminalLineType) => void
+): Promise<string> => {
+  try {
+    addTerminalLine("Calling IBM Profile Analysis API...", "command")
+    const ibmApiResponse = await fetch("/api/ibm-profile-analysis", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        input: ibmInput,
+        parameters: {
+          decoding_method: "greedy",
+          max_new_tokens: 8000,
+          min_new_tokens: 0,
+          stop_sequences: [],
+          repetition_penalty: 1,
+        },
+        model_id: "ibm/granite-3-8b-instruct",
+        project_id: "b44a8ace-b7f0-49d7-b212-da6ce8d60825",
+      }),
+    })
+    if (!ibmApiResponse.ok)
+      throw new Error("IBM Profile Analysis API call failed")
+    const ibmData = await ibmApiResponse.json()
+    const analysisText =
+      ibmData.results?.[0]?.generated_text || "No analysis generated"
+    addTerminalLine("Profile analysis completed.", "success")
+    addTerminalLine("Generated profile analysis: " + analysisText, "success")
+    return analysisText
+  } catch (error) {
+    console.error("Error in callIBMProfileAnalysis:", error)
+    throw error
+  }
+}
+
+// Helper function to call IBM API for tweet thread generation (similar to your single tweet generator)
+const callIBMTweetThreadGeneration = async (
+  prompt: string,
+  addTerminalLine: (text: string, type?: TerminalLineType) => void
+): Promise<string> => {
+  try {
+    addTerminalLine("Calling IBM Tweet Thread Generation API...", "command")
+    const ibmApiResponse = await fetch("/api/ibm-profile-analysis", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        input: prompt,
+        parameters: {
+          decoding_method: "greedy",
+          max_new_tokens: 800,
+          min_new_tokens: 0,
+          stop_sequences: [],
+          repetition_penalty: 1,
+        },
+        model_id: "ibm/granite-3-8b-instruct",
+        project_id: "b44a8ace-b7f0-49d7-b212-da6ce8d60825",
+      }),
+    })
+    if (!ibmApiResponse.ok)
+      throw new Error("IBM Tweet Thread Generation API call failed")
+    const ibmData = await ibmApiResponse.json()
+    const threadText =
+      ibmData.results?.[0]?.generated_text || "No thread generated"
+    addTerminalLine("Tweet thread generation completed.", "success")
+    addTerminalLine("Generated thread: " + threadText, "success")
+    return threadText
+  } catch (error) {
+    console.error("Error in callIBMTweetThreadGeneration:", error)
+    throw error
+  }
+}
+
 export default function AnalysisPage() {
   const [username, setUsername] = useState("")
   const [url, setUrl] = useState("")
   const [urlQuery, setUrlQuery] = useState("")
+  const [analysisOption, setAnalysisOption] = useState("event") // "event", "yt", or "none"
   const [terminalLines, setTerminalLines] = useState<
     { text: string; type: TerminalLineType }[]
   >([])
@@ -50,6 +125,7 @@ export default function AnalysisPage() {
   const [editableTweets, setEditableTweets] = useState<string[]>([])
   const [isEditing, setIsEditing] = useState(false)
   const [generationVersion, setGenerationVersion] = useState(0)
+  const [profileAnalysis, setProfileAnalysis] = useState("")
   const terminalEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -87,70 +163,81 @@ export default function AnalysisPage() {
 
       if (dbError && dbError.code !== "PGRST116") throw dbError
 
+      let profileData = null
+
       if (existingUser) {
         addTerminalLine("Found existing user data", "success")
         addTerminalLine(
           JSON.stringify(existingUser.raw_content, null, 2),
           "info"
         )
-        setUsernameVerified(true)
-        setShowUrlInput(true)
-        return
-      }
-
-      addTerminalLine("Analyzing Twitter account...", "command")
-      const usernameResponse = await fetch(
-        "https://api-lr.agent.ai/v1/agent/sa3zhs11qxhjbd8t/webhook/8e25ef47",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ twitter_name: username }),
-        }
-      )
-      if (!usernameResponse.ok) throw new Error("Username analysis failed")
-      const usernameData = await usernameResponse.json()
-
-      // Check the structure of the response and display accordingly
-      if (Array.isArray(usernameData.response)) {
-        // If the response is an array (as in your DB record), display the tweet texts
-        const tweetsText = usernameData.response
-          .map((tweet: any) => tweet.text)
-          .join("\n\n")
-        addTerminalLine(tweetsText, "info")
-      } else if (
-        usernameData.response &&
-        usernameData.response.heading &&
-        usernameData.response.response
-      ) {
-        addTerminalLine(
-          `${usernameData.response.heading}\n${usernameData.response.response}`,
-          "info"
-        )
+        // Immediately trigger profile analysis using the found data
+        profileData = existingUser.raw_content
       } else {
-        // Fallback to showing the raw JSON
-        addTerminalLine(
-          "Username API raw output: " +
-            JSON.stringify(usernameData.response, null, 2),
-          "info"
+        addTerminalLine("User not found in database, calling external Twitter analysis...", "command")
+        const usernameResponse = await fetch(
+          "https://api-lr.agent.ai/v1/agent/sa3zhs11qxhjbd8t/webhook/8e25ef47",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ twitter_name: username }),
+          }
         )
+        if (!usernameResponse.ok)
+          throw new Error("Username analysis failed")
+        const usernameData = await usernameResponse.json()
+        // Display the result based on structure
+        if (Array.isArray(usernameData.response)) {
+          const tweetsText = usernameData.response
+            .map((tweet: any) => tweet.text)
+            .join("\n\n")
+          addTerminalLine(tweetsText, "info")
+        } else if (
+          usernameData.response &&
+          usernameData.response.heading &&
+          usernameData.response.response
+        ) {
+          addTerminalLine(
+            `${usernameData.response.heading}\n${usernameData.response.response}`,
+            "info"
+          )
+        } else {
+          addTerminalLine(
+            "Username API raw output: " +
+              JSON.stringify(usernameData.response, null, 2),
+            "info"
+          )
+        }
+        profileData = usernameData.response
+        addTerminalLine("Saving new user information...", "command")
+        const { error: insertError } = await supabase
+          .from("social_posts")
+          .insert([
+            {
+              platform: "twitter",
+              username,
+              raw_content: usernameData.response,
+              content: "",
+            },
+          ])
+        if (insertError) throw insertError
+        addTerminalLine("User data saved successfully", "success")
       }
 
-      addTerminalLine("Saving user information...", "command")
-      // Save new user record in the social_posts table
-      const { error: insertError } = await supabase
-        .from("social_posts")
-        .insert([
-          {
-            platform: "twitter",
-            username,
-            raw_content: usernameData.response,
-            content: "",
-          },
-        ])
+      // Build the IBM prompt for profile analysis using the profileData
+      const ibmInput = `<|start_of_role|>system<|end_of_role|>
 
-      if (insertError) throw insertError
+**Social Media Profile Analysis**
 
-      addTerminalLine("User data saved successfully", "success")
+Your role is to analyze JSON-formatted data representing a user's Twitter profile. Focus on extracting insights about the user's writing style, tone, language, and creative expression from their tweets. Ignore retweets and focus solely on original content.
+
+Input Data:
+${JSON.stringify(profileData, null, 2)}
+
+Output: A detailed profile analysis report summarizing the user's tone, word choice, narrative style, and overall persona.
+`
+      const analysisReport = await callIBMProfileAnalysis(ibmInput, addTerminalLine)
+      setProfileAnalysis(analysisReport)
       setUsernameVerified(true)
       setShowUrlInput(true)
     } catch (error) {
@@ -170,38 +257,95 @@ export default function AnalysisPage() {
 
     try {
       addTerminalLine("Starting URL analysis...", "command")
-      const urlResponse = await fetch(
-        "https://api-lr.agent.ai/v1/agent/9xgko4mdmqambne0/webhook/ac042486",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user_URL: url,
-            user_question: urlQuery,
-          }),
-        }
-      )
-      if (!urlResponse.ok) throw new Error("URL analysis failed")
-      const urlData = await urlResponse.json()
-      addTerminalLine(urlData.response.response, "info")
+      let urlAnalysis = ""
+
+      if (analysisOption === "yt") {
+        addTerminalLine("Sending YouTube video URL to API...", "command")
+        const ytResponse = await fetch(
+          "https://api-lr.agent.ai/v1/agent/0usvm0kxa18r1fs6/webhook/7243feda",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ yt_url: url }),
+          }
+        )
+        if (!ytResponse.ok) throw new Error("YT video API call failed")
+        const ytData = await ytResponse.json()
+        addTerminalLine("YT Video API call successful.", "success")
+        addTerminalLine(
+          "YT Video API raw output: " + JSON.stringify(ytData, null, 2),
+          "success"
+        )
+        urlAnalysis = JSON.stringify(ytData, null, 2)
+      } else if (analysisOption === "event") {
+        addTerminalLine("Starting event URL analysis...", "command")
+        const eventResponse = await fetch(
+          "https://api-lr.agent.ai/v1/agent/9xgko4mdmqambne0/webhook/ac042486",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user_URL: url,
+              user_question: urlQuery,
+            }),
+          }
+        )
+        if (!eventResponse.ok) throw new Error("Event URL analysis failed")
+        const eventData = await eventResponse.json()
+        addTerminalLine("Event API call successful.", "success")
+        addTerminalLine(
+          "Event API raw output: " +
+            JSON.stringify(eventData.response, null, 2),
+          "success"
+        )
+        urlAnalysis = JSON.stringify(eventData.response, null, 2)
+      } else {
+        addTerminalLine("No external URL analysis selected.", "command")
+        urlAnalysis = ""
+      }
+
+      // Build different system prompts based on the selected option.
+      let systemPrompt = ""
+      if (analysisOption === "yt") {
+        systemPrompt = `System Prompt:
+You are an expert tweet thread generator with deep knowledge of social media language.
+Using the following profile analysis:
+${profileAnalysis}
+and the YouTube video context:
+${urlAnalysis}
+Generate exactly 7 engaging tweets that reflect the user's unique voice and incorporate insights from the video.
+The thread topic is:
+${urlQuery}
+Each tweet must start with "#@" and end with "@#".
+Output: A Twitter thread with exactly 7 tweets following the above format.`
+      } else if (analysisOption === "event") {
+        systemPrompt = `System Prompt:
+You are an expert tweet thread generator with a keen understanding of social media language.
+Using the following profile analysis:
+${profileAnalysis}
+and the event/article context:
+${urlAnalysis}
+Generate exactly 7 engaging tweets that reflect the user's style and capture key aspects of the event.
+The thread topic is:
+${urlQuery}
+Each tweet must start with "#@" and end with "@#".
+Output: A Twitter thread with exactly 7 tweets following the above format.`
+      } else if (analysisOption === "none") {
+        systemPrompt = `System Prompt:
+You are an expert tweet thread generator with a deep understanding of social media language.
+Using the following profile analysis:
+${profileAnalysis}
+Generate exactly 7 engaging tweets that reflect the user's unique voice without incorporating any external context.
+The thread topic is:
+${urlQuery}
+Each tweet must start with "#@" and end with "@#".
+Output: A Twitter thread with exactly 7 tweets following the above format.`
+      }
 
       addTerminalLine("Generating Twitter thread...", "command")
-      const tweetResponse = await fetch(
-        "https://api-lr.agent.ai/v1/agent/i0v6lj26fu5sfw9x/webhook/9e2806c6",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user_analysis: terminalLines.map((l) => l.text).join("\n"),
-            url_analysis: urlData.response.response,
-            thread_about: urlQuery,
-          }),
-        }
-      )
-      if (!tweetResponse.ok) throw new Error("Thread generation failed")
-      const tweetData = await tweetResponse.json()
-      const generatedThread = tweetData.response.response
-      const tweetParts = generatedThread.split("#@").slice(1)
+      const threadText = await callIBMTweetThreadGeneration(systemPrompt, addTerminalLine)
+      // Parse the thread using the delimiters "#@" and "@#"
+      const tweetParts = threadText.split("#@").slice(1)
       const parsedTweets = tweetParts.map((part: string) =>
         part.split("@#")[0].trim()
       )
@@ -236,16 +380,17 @@ export default function AnalysisPage() {
 
     try {
       addTerminalLine("Saving thread to database...", "command")
-      // Convert tweets array to single string
       const postContent = editableTweets.join("\n\n")
 
       const { error } = await supabase
-        .from("twitter_posts")
+        .from("social_media_posts")
         .insert([
           {
-            twitter_username: username,
-            post_content: postContent,
-            img_url: null, // Add image URL if available
+            platform: "twitter_thread",
+            username: username,
+            content: postContent,
+            img_url: null,
+            created_at: new Date().toISOString(),
           },
         ])
 
@@ -420,18 +565,55 @@ export default function AnalysisPage() {
                 exit={{ opacity: 0 }}
               >
                 <div className="space-y-4">
-                  <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }}>
-                    <label className="block text-sm text-cyan-400 mb-2">
-                      Enter a URL to analyze
-                    </label>
-                    <input
-                      type="url"
-                      value={url}
-                      onChange={(e) => setUrl(e.target.value)}
-                      className="w-full px-4 py-3 bg-gray-800 rounded-lg border border-cyan-500/30 text-cyan-300 placeholder-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                      required
-                    />
+                  {/* Button slider for analysis option */}
+                  <motion.div
+                    className="flex gap-2 mb-4"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    {["event", "yt", "none"].map((option) => {
+                      const label =
+                        option === "event"
+                          ? "Event/article URL"
+                          : option === "yt"
+                          ? "YT video"
+                          : "None"
+                      return (
+                        <motion.button
+                          key={option}
+                          type="button"
+                          onClick={() => setAnalysisOption(option)}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className={`px-4 py-2 rounded-lg border transition-colors duration-300 ${
+                            analysisOption === option
+                              ? "bg-cyan-500 text-white shadow-lg"
+                              : "bg-cyan-500/10 text-cyan-300"
+                          }`}
+                        >
+                          {label}
+                        </motion.button>
+                      )
+                    })}
                   </motion.div>
+
+                  {/* Conditionally show URL input if analysis option is not "none" */}
+                  {analysisOption !== "none" && (
+                    <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }}>
+                      <label className="block text-sm text-cyan-400 mb-2">
+                        Enter a URL to analyze
+                      </label>
+                      <input
+                        type="url"
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                        className="w-full px-4 py-3 bg-gray-800 rounded-lg border border-cyan-500/30 text-cyan-300 placeholder-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        required
+                      />
+                    </motion.div>
+                  )}
+
                   <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }}>
                     <label className="block text-sm text-cyan-400 mb-2">
                       What is the Thread about?

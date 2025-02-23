@@ -170,8 +170,32 @@ export default function AnalysisPage() {
         profileData = existingUser.raw_content
         setShowUrlInput(true)
       } else {
-        profileData = { username, posts: [] }
-        addTerminalLine("No existing profile data found. Using simulated profile data.", "success")
+        // If user not found, call external Twitter analysis API.
+        addTerminalLine("User not found in Supabase. Calling external Twitter analysis API...", "command")
+        const twitterResponse = await fetch("https://api-lr.agent.ai/v1/agent/sa3zhs11qxhjbd8t/webhook/8e25ef47", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ twitter_name: username }),
+        })
+        if (!twitterResponse.ok) throw new Error("External Twitter analysis API call failed")
+        const twitterData = await twitterResponse.json()
+        addTerminalLine("External Twitter analysis API call successful.", "success")
+        addTerminalLine("External API raw output: " + JSON.stringify(twitterData, null, 2), "success")
+        profileData = twitterData.response ? twitterData.response : twitterData
+        // Save new account data.
+        addTerminalLine("Saving new Twitter account data...", "command")
+        const { error: insertError } = await supabase
+          .from("social_posts")
+          .insert([
+            {
+              platform: "twitter",
+              username: username,
+              raw_content: profileData,
+              content: "",
+            },
+          ])
+        if (insertError) throw insertError
+        addTerminalLine("Account data saved successfully", "success")
         setShowUrlInput(true)
       }
 
@@ -326,6 +350,8 @@ ${userProfileAnalysis}
 Additional Context:
 ${additionalContext}
 
+Tweet Query:
+${urlQuery}
 Output: A single, original tweet that incorporates the given context.
 `
       }
@@ -392,17 +418,19 @@ Output: A single, original tweet that incorporates the given context.
         image_url: imageUrl || "No image generated",
       }
       const { error } = await supabase
-        .from("social_posts")
-        .update({
-          raw_content: rawContent,
-          content: contentToSave,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("platform", "twitter")
-        .eq("username", username)
+        .from("social_media_posts")
+        .insert([
+          {
+            platform: "twitter",
+            username: username,
+            content: contentToSave,
+            img_url: imageUrl,
+            created_at: new Date().toISOString(),
+          },
+        ])
       if (error) {
-        console.error("Supabase update error:", error)
-        addTerminalLine("Supabase update error: " + error.message, "error")
+        console.error("Supabase insert error:", error)
+        addTerminalLine("Supabase insert error: " + error.message, "error")
         throw error
       }
       addTerminalLine("Post saved successfully!", "success")
@@ -412,7 +440,6 @@ Output: A single, original tweet that incorporates the given context.
       addTerminalLine(`Save failed: ${errorMessage}`, "error")
     }
   }
-
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(editableContent)

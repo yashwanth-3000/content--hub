@@ -161,7 +161,6 @@ const Hero = () => {
       <div className="crt-effect" style={{ minHeight: "100%" }}>
         <motion.div className="absolute inset-0 opacity-20" style={{ background }} />
 
-
         <div className="container mx-auto px-4 h-screen flex items-center relative z-10">
           <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Left Content */}
@@ -250,7 +249,7 @@ const Hero = () => {
                       animate={{ x: [0, 4, 0] }}
                       transition={{ repeat: Infinity, duration: 1.5 }}
                     >
-                      <ArrowRight className="h-5 w-5" style={{ color: "#67e8f9" }} />
+                      <ArrowRight className="h-5 w-5" style={{ color: "#FF4136" }} />
                     </motion.div>
                   </span>
                 </motion.a>
@@ -299,139 +298,7 @@ const Hero = () => {
                   </span>
                 </motion.a>
               </div>
-
-              {/* Big Button (Modified Only) */}
-              <div className="mt-2">
-                <motion.a
-                  href="/social-media-timeline"
-                  className="relative overflow-hidden group block w-full"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onHoverStart={() => progress.set(1)}
-                  onHoverEnd={() => progress.set(0)}
-                  style={{
-                    padding: "0.75rem 1.5rem",
-                    textDecoration: "none",
-                    position: "relative",
-                    borderRadius: "2rem",
-                    boxShadow: "0 0 15px rgba(103,232,249,0.3)",
-                  }}
-                >
-                  <motion.div
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      background:
-                        "linear-gradient(to right, rgba(103,232,249,0.2), rgba(34,211,238,0.1))",
-                      backgroundPositionX: animatedGradient,
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: "1px",
-                      backgroundColor: "#111827",
-                      borderRadius: "2rem",
-                    }}
-                  />
-                  <span
-                    style={{
-                      position: "relative",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "0.75rem",
-                      color: "#67e8f9",
-                      fontSize: "1rem",
-                    }}
-                  >
-                    {/* Animated Calendar Icon */}
-                    <motion.span
-                      whileHover={{ rotate: 15, scale: 1.1 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <Calendar className="h-5 w-5" style={{ color: "#67e8f9" }} />
-                    </motion.span>
-                    Genratre your content calnder
-                    {/* Animated Pink Arrow */}
-                    <motion.div
-                      animate={{ x: [0, 4, 0] }}
-                      transition={{ repeat: Infinity, duration: 1.5 }}
-                      whileHover={{ rotate: 15 }}
-                    >
-                      <ArrowRight className="h-5 w-5" style={{ color: "#E1306C" }} />
-                    </motion.div>
-                  </span>
-                </motion.a>
-              </div>
-
-              {/* Powered By Section */}
-              <div className="mt-12 flex items-center gap-4 opacity-75">
-                <span style={{ color: "rgba(103,232,249,0.7)" }}>
-                  Powered by:
-                </span>
-                <div className="flex gap-4">
-                  <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-1">
-                    <a
-                      href="https://lablab.ai"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <span
-                        style={{
-                          background: "linear-gradient(45deg, #FF6B6B, #4ECDC4)",
-                          WebkitBackgroundClip: "text",
-                          WebkitTextFillColor: "transparent",
-                          fontWeight: "700",
-                        }}
-                      >
-                        Lablab.ai
-                      </span>
-                    </a>
-                  </motion.div>
-                  <span style={{ color: "rgba(103,232,249,0.3)" }}>|</span>
-                  <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-1">
-                    <a
-                      href="https://www.ibm.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <span
-                        style={{
-                          background: "linear-gradient(45deg, #00C4FF, #0051FF)",
-                          WebkitBackgroundClip: "text",
-                          WebkitTextFillColor: "transparent",
-                          fontWeight: "700",
-                        }}
-                      >
-                        IBM Granite
-                      </span>
-                    </a>
-                  </motion.div>
-                  <span style={{ color: "rgba(103,232,249,0.3)" }}>|</span>
-                  <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-1">
-                    <a
-                      href="https://agent.ai"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <span
-                        style={{
-                          background: "linear-gradient(45deg, #FF9A9E, #FAD0C4)",
-                          WebkitBackgroundClip: "text",
-                          WebkitTextFillColor: "transparent",
-                          fontWeight: "700",
-                        }}
-                      >
-                        Agent.ai
-                      </span>
-                    </a>
-                  </motion.div>
-                </div>
-              </div>
+              {/* Calendar button removed */}
             </motion.div>
 
             {/* Right Preview */}
@@ -583,7 +450,8 @@ const Hero = () => {
                       }}
                     >
                       {selectedPlatform.charAt(0).toUpperCase() +
-                        selectedPlatform.slice(1)} Content Specialist
+                        selectedPlatform.slice(1)}{" "}
+                      Content Specialist
                     </div>
                   </div>
                 </div>
