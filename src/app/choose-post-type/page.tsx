@@ -8,7 +8,6 @@ import {
   MessageCircle,
   Heart,
   Linkedin,
-  Instagram,
   Repeat2,
   Share2,
 } from "lucide-react"
@@ -64,8 +63,10 @@ export default function NewHomePage() {
           background-size: 100% 2px, 3px 100%;
         }
         .card-grid {
-          display: grid;
-          grid-template-columns: repeat(2, auto);
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
           gap: 2rem;
         }
       `}</style>
@@ -84,7 +85,7 @@ export default function NewHomePage() {
           Choose Your Post Type
         </div>
 
-        {/* Centered 2x2 Grid Container */}
+        {/* Centered Horizontal Container */}
         <div
           style={{
             display: "flex",
@@ -102,7 +103,8 @@ export default function NewHomePage() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               style={{
-                width: "480px",
+                width: "100%",
+                maxWidth: "480px",
                 backgroundColor: "rgba(31, 41, 55, 0.5)",
                 padding: "0.75rem",
                 borderRadius: "1rem",
@@ -213,7 +215,7 @@ export default function NewHomePage() {
                 <Link href="/generate-single-tweet" style={{ textDecoration: "none" }}>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileTap={{ scale: 0.97 }}
                     style={{
                       padding: "0.75rem 1rem",
                       backgroundColor: "rgba(6,182,212,0.1)",
@@ -249,7 +251,8 @@ export default function NewHomePage() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               style={{
-                width: "480px",
+                width: "100%",
+                maxWidth: "480px",
                 backgroundColor: "rgba(31, 41, 55, 0.5)",
                 padding: "1rem",
                 borderRadius: "1rem",
@@ -375,7 +378,7 @@ export default function NewHomePage() {
                 <Link href="/generate-thread" style={{ textDecoration: "none" }}>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileTap={{ scale: 0.97 }}
                     style={{
                       padding: "0.75rem 1rem",
                       backgroundColor: "rgba(6,182,212,0.1)",
@@ -403,156 +406,6 @@ export default function NewHomePage() {
               </div>
             </motion.div>
 
-            {/* ==================== Instagram Post Card (Updated with Pink/Red Aesthetics) ==================== */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.4, type: "spring", stiffness: 100 }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              style={{
-                width: "480px",
-                backgroundColor: "rgba(31, 41, 55, 0.5)",
-                padding: "1rem",
-                borderRadius: "1rem",
-                border: "1px solid rgba(240,46,170,0.2)",
-                boxShadow: "0 0 20px rgba(240,46,170,0.1)",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              {/* Instagram Header */}
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <div
-                  style={{
-                    width: "48px",
-                    height: "48px",
-                    borderRadius: "50%",
-                    background:
-                      "linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Instagram size={24} color="white" />
-                </div>
-                <div style={{ color: "#f02ea6", fontWeight: "700" }}>@instauser</div>
-              </div>
-              {/* Caption comes FIRST */}
-              <div style={{ color: "#f02ea6", fontSize: "0.95rem", lineHeight: "1.5", marginTop: "0.25rem" }}>
-                This is a sample Instagram caption with some hashtags{" "}
-                <strong>#cyberpunk</strong> <strong>#AI</strong>
-              </div>
-              {/* Square Image Preview with overlay instructions */}
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  paddingBottom: "100%",
-                  borderRadius: "0.5rem",
-                  overflow: "hidden",
-                  marginTop: "0.25rem",
-                  background: "linear-gradient(145deg, rgba(240,46,170,0.1), rgba(240,46,170,0.05))",
-                }}
-              >
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: "linear-gradient(145deg, rgba(240,46,170,0.1), rgba(240,46,170,0.05))",
-                  }}
-                />
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    padding: "10%",
-                    background: "rgba(0, 0, 0, 0.5)",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-evenly",
-                    alignItems: "center",
-                    color: "#f02ea6",
-                    textAlign: "center",
-                    fontSize: "1.2rem",
-                    lineHeight: "1.4",
-                  }}
-                >
-                  <h3 style={{ margin: "0 0 0.5rem 0", fontSize: "1.4rem" }}>How to Use?</h3>
-                  <ol
-                    style={{
-                      margin: 0,
-                      paddingLeft: "1rem",
-                      listStyle: "decimal",
-                      textAlign: "left",
-                      width: "100%",
-                    }}
-                  >
-                    <li>Click "Generate Content".</li>
-                    <li>Enter the username you want to use (e.g., Elon Musk).</li>
-                    <li>Specify what the content should be about.</li>
-                    <li>(Optional) Provide any articles or page links.</li>
-                    <li>Click "Generate Content" again.</li>
-                    <li>Preview and save the content.</li>
-                  </ol>
-                </div>
-              </div>
-              {/* Engagement Stats */}
-              <div
-                style={{
-                  borderTop: "1px solid rgba(240,46,170,0.2)",
-                  padding: "0.5rem 0",
-                  color: "rgba(240,46,170,0.7)",
-                  fontSize: "0.875rem",
-                  textAlign: "center",
-                  marginTop: "0.25rem",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-around" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
-                    <Heart size={18} fill="#ef4444" color="#ef4444" />
-                    <span>1.2K</span>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
-                    <MessageCircle size={18} />
-                    <span>89</span>
-                  </div>
-                </div>
-              </div>
-              {/* Generate Button */}
-              <div style={{ marginTop: "0.5rem" }}>
-                <Link href="/generate-instagram" style={{ textDecoration: "none" }}>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    style={{
-                      padding: "0.75rem 1rem",
-                      backgroundColor: "rgba(240,46,170,0.1)",
-                      color: "#f02ea6",
-                      borderRadius: "0.75rem",
-                      border: "1px solid rgba(240,46,170,0.3)",
-                      width: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "0.5rem",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <RefreshCw
-                      style={{
-                        height: "1.25rem",
-                        width: "1.25rem",
-                        animation: "spin 2s linear infinite",
-                      }}
-                    />
-                    <span style={{ fontSize: "1rem" }}>Generate Instagram Post</span>
-                  </motion.button>
-                </Link>
-              </div>
-            </motion.div>
-
             {/* ==================== Improved LinkedIn Post Card ==================== */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -561,7 +414,8 @@ export default function NewHomePage() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               style={{
-                width: "480px",
+                width: "100%",
+                maxWidth: "480px",
                 backgroundColor: "rgba(31,41,55,0.5)",
                 padding: "0.5rem",
                 borderRadius: "1rem",
@@ -681,7 +535,7 @@ export default function NewHomePage() {
                 <Link href="/generate-linkedin" style={{ textDecoration: "none" }}>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileTap={{ scale: 0.97 }}
                     style={{
                       padding: "0.75rem",
                       backgroundColor: "rgba(10,102,194,0.1)",

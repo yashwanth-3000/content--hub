@@ -52,9 +52,9 @@ export default function AnalysisPage() {
   const [editableContent, setEditableContent] = useState("")
   const [isEditing, setIsEditing] = useState(false)
   const [imageUrl, setImageUrl] = useState("")
-  // Slider option: "event", "yt", or "none"
+  // Slider options: "event", "yt", or "none"
   const [analysisOption, setAnalysisOption] = useState("event")
-  // New state to store the user's profile analysis (from IBM API)
+  // Store the user profile analysis (from IBM API)
   const [userProfileAnalysis, setUserProfileAnalysis] = useState("")
 
   const terminalEndRef = useRef<HTMLDivElement>(null)
@@ -75,7 +75,7 @@ export default function AnalysisPage() {
     setTerminalLines((prev) => [...prev, { text, type }])
   }
 
-  // Existing IBM Profile Analysis call (used during user profile analysis)
+  // Call IBM Profile Analysis API (used during user profile analysis)
   const callIBMProfileAnalysis = async (ibmInput: string): Promise<string> => {
     try {
       addTerminalLine("Calling IBM Profile Analysis API...", "command")
@@ -99,7 +99,7 @@ export default function AnalysisPage() {
       const ibmData = await ibmApiResponse.json()
       const generatedText = ibmData.results?.[0]?.generated_text || "No analysis generated"
       addTerminalLine("Profile analysis completed.", "success")
-      addTerminalLine("Generated analysis: " + generatedText, "info")
+      addTerminalLine("Generated analysis: " + generatedText, "success")
       return generatedText
     } catch (error) {
       console.error("Error in callIBMProfileAnalysis:", error)
@@ -107,7 +107,7 @@ export default function AnalysisPage() {
     }
   }
 
-  // New function: Call IBM to generate a tweet using user profile analysis and additional context.
+  // New function: Call IBM to generate a tweet based on context.
   const callIBMTweetGeneration = async (prompt: string): Promise<string> => {
     try {
       addTerminalLine("Calling IBM Tweet Generation API...", "command")
@@ -131,7 +131,7 @@ export default function AnalysisPage() {
       const ibmData = await ibmApiResponse.json()
       const tweetText = ibmData.results?.[0]?.generated_text || "No tweet generated"
       addTerminalLine("Tweet generation completed.", "success")
-      addTerminalLine("Generated tweet: " + tweetText, "info")
+      addTerminalLine("Generated tweet: " + tweetText, "success")
       return tweetText
     } catch (error) {
       console.error("Error in callIBMTweetGeneration:", error)
@@ -139,7 +139,7 @@ export default function AnalysisPage() {
     }
   }
 
-  // --- USERNAME PROFILE ANALYSIS (Without Supabase saving of IBM content) ---
+  // --- USERNAME PROFILE ANALYSIS (Without saving IBM content) ---
   const handleUsernameSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -166,40 +166,70 @@ export default function AnalysisPage() {
 
       if (existingUser) {
         addTerminalLine("Found existing user data in database.", "success")
-        addTerminalLine("Supabase data: " + JSON.stringify(existingUser, null, 2), "info")
+        addTerminalLine("Supabase data: " + JSON.stringify(existingUser, null, 2), "success")
         profileData = existingUser.raw_content
         setShowUrlInput(true)
       } else {
         profileData = { username, posts: [] }
-        addTerminalLine("No existing profile data found. Using simulated profile data.", "info")
+        addTerminalLine("No existing profile data found. Using simulated profile data.", "success")
         setShowUrlInput(true)
       }
 
       const ibmInput = `<|start_of_role|>system<|end_of_role|>
+
 **Social Media Profile Analysis**
 
-Your role is to analyze JSON-formatted data representing a user's profile from Twitter or LinkedIn, focusing on how the user writes and expresses themselves.
+Your role is to analyze JSON-formatted data representing a user's profile from Twitter or LinkedIn, with a primary focus on understanding and describing how the user writes and expresses themselves. Follow these steps:
 
-### Input Validation
-- Confirm the JSON structure contains profile details and posts.
+### 1. Input Validation
+- **Data Format:** Confirm that the input is valid JSON containing the user's profile details, posts (tweets, captions, descriptions), and associated metadata.
+- **Platform Identification:** Determine whether the data is from Twitter or LinkedIn.
 
-### Platform-Specific Filtering
-- **Twitter:** Analyze only original tweets (exclude any containing "@RT").
-- **LinkedIn:** Analyze only original posts.
+### 2. Platform-Specific Filtering
+- **Twitter:**  
+  - Analyze only the user's original tweets.
+  - Exclude any tweet that contains the string "@RT" (indicating retweets).
+  
+- **LinkedIn:**  
+  - Focus exclusively on the user's original posts.
+  - Remove any reposted or shared content from your analysis.
 
-### Analysis of Writing Style
-- Evaluate tone, language, narrative style, and content originality.
+### 3. In-Depth Analysis of Writing Style
+- **Tone and Voice:**  
+  - Evaluate whether the user's tone is formal, casual, humorous, sarcastic, or another distinctive style.
+  - Observe any consistency or shifts in tone across different posts.
+  
+- **Language and Word Choice:**  
+  - Examine vocabulary, sentence structure, and clarity.
+  - Identify any use of slang, technical language, or industry-specific jargon.
+  - Assess the originality of the language and the creativity in word choice.
+  
+- **Narrative and Expression:**  
+  - Look for creative writing elements like metaphors, analogies, and storytelling.
+  - Consider how these techniques contribute to the users overall persona and unique writing style.
+  
+- **Content Originality:**  
+  - Base your analysis solely on the users original content as determined by the filtering rules above.
 
-### Structured Report
-- Provide a clear, well-organized report with sections summarizing key insights.
-- Include a final list of all original tweets or posts.
+### 4. Structured Report and Final Lists
+- **Report Structure:**  
+  - Produce a well-organized, human-readable report with clear sections or bullet points.
+  - Summarize key insights about the users tone, vocabulary, creative expression, and recurring stylistic themes.
+  
+- **Final Lists:**  
+  - At the end of the report, provide:
+    - A complete list of all original tweets (excluding tweets with "@RT").
+    - Or, if analyzing LinkedIn, a complete list of all original posts (excluding reposted content).
+
+Your analysis should deeply focus on the users personal writing style, capturing the nuances of their language, the consistency or evolution in their tone, and the creative flair evident in their posts.
+
+---
 
 ---<|end_of_text|>
 <|start_of_role|>user<|end_of_role|>data : ${JSON.stringify(profileData)} <|end_of_text|>
 `
       const analysisReport = await callIBMProfileAnalysis(ibmInput)
       addTerminalLine("IBM analysis complete. (Not saved to Supabase, not shown in preview)", "success")
-      // Store the user profile analysis for later tweet generation.
       setUserProfileAnalysis(analysisReport)
       setUsernameVerified(true)
     } catch (error) {
@@ -220,7 +250,6 @@ Your role is to analyze JSON-formatted data representing a user's profile from T
 
     try {
       let additionalContext = ""
-      // For "YT video" option.
       if (analysisOption === "yt") {
         addTerminalLine("Sending YouTube video URL to API...", "command")
         const ytResponse = await fetch("https://api-lr.agent.ai/v1/agent/0usvm0kxa18r1fs6/webhook/7243feda", {
@@ -230,12 +259,11 @@ Your role is to analyze JSON-formatted data representing a user's profile from T
         })
         if (!ytResponse.ok) throw new Error("YT video API call failed")
         const ytData = await ytResponse.json()
-        addTerminalLine("YT Video API raw output:", "info")
-        addTerminalLine(JSON.stringify(ytData, null, 2), "info")
+        addTerminalLine("YT Video API call successful.", "success")
+        addTerminalLine("YT Video API raw output:", "success")
+        addTerminalLine(JSON.stringify(ytData, null, 2), "success")
         additionalContext = JSON.stringify(ytData, null, 2)
-      }
-      // For "event" option.
-      else if (analysisOption === "event") {
+      } else if (analysisOption === "event") {
         addTerminalLine("Starting event URL analysis...", "command")
         const urlResponse = await fetch("https://api-lr.agent.ai/v1/agent/9xgko4mdmqambne0/webhook/ac042486", {
           method: "POST",
@@ -248,16 +276,38 @@ Your role is to analyze JSON-formatted data representing a user's profile from T
         })
         if (!urlResponse.ok) throw new Error("Event URL analysis failed")
         const urlData = await urlResponse.json()
-        addTerminalLine("Event API raw output:", "info")
-        addTerminalLine(JSON.stringify(urlData.response, null, 2), "info")
+        addTerminalLine("Event API call successful.", "success")
+        addTerminalLine("Event API raw output:", "success")
+        addTerminalLine(JSON.stringify(urlData.response, null, 2), "success")
         additionalContext = JSON.stringify(urlData.response, null, 2)
-      } else {
-        addTerminalLine("No URL provided. Using only the tweet query.", "command")
+      } else if (analysisOption === "none") {
+        addTerminalLine("No external URL provided. Using only tweet query and profile analysis.", "command")
+        additionalContext = ""
       }
 
       // Build a system prompt for tweet generation.
-      // It uses the stored user profile analysis and the additional context.
-      const tweetPrompt = `System Prompt:
+      let tweetPrompt = ""
+      if (analysisOption === "none") {
+        tweetPrompt = `System Prompt:
+You are an expert tweet generator with a deep understanding of social media language and stylistic nuance. Your objective is to craft a single tweet that captures the essence of the user's unique voice, tone, and style by analyzing the user's tweet text, not by directly reusing any of their previous tweets. Additionally, incorporate relevant details from the tweet query to ensure the tweet is both topical and engaging.
+
+Instructions:
+1. Analyze the "User Profile Analysis" to extract the user's distinctive language, tone, and recurring stylistic quirks from their tweet text.
+2. Do not directly copy any existing tweet; instead, synthesize a new tweet that embodies the user's unique style.
+3. Seamlessly integrate key elements from the "Tweet Query" to ensure the tweet is contextually rich and aligns with the querys intent.
+4. Ensure the tweet is concise, engaging, and reflective of the user's personality while adhering to the platform's character limit (280 characters or fewer).
+5. Do not include any extra text, labels, or commentary—output only the final tweet text.
+
+User Profile Analysis:
+${userProfileAnalysis}
+
+Tweet Query:
+${urlQuery}
+
+Output: A single, original tweet that incorporates the provided query context while perfectly mirroring the user's tweet style.`;
+
+      } else {
+        tweetPrompt = `System Prompt:
 You are an expert tweet generator with a deep understanding of social media language and stylistic nuance. 
 Your objective is to craft a single tweet that perfectly mimics the user's unique voice, tone,
 and style as described in the provided user profile analysis. You will also integrate relevant details
@@ -278,9 +328,12 @@ ${additionalContext}
 
 Output: A single, original tweet that incorporates the given context.
 `
+      }
+
       const generatedTweet = await callIBMTweetGeneration(tweetPrompt)
       setTweetContent(generatedTweet)
       setEditableContent(generatedTweet)
+      addTerminalLine("Tweet generation API call successful.", "success")
       addTerminalLine("Tweet generated successfully", "success")
 
       addTerminalLine("Generating tweet image...", "command")
@@ -291,8 +344,6 @@ Output: A single, original tweet that incorporates the given context.
       })
       if (!imageResponse.ok) throw new Error("Image generation failed")
       const imageData = await imageResponse.json()
-      
-      // Try to determine the image tag string from the response.
       let imgTag: string | undefined;
       if (imageData.response && imageData.response.response) {
         imgTag = imageData.response.response;
@@ -301,24 +352,24 @@ Output: A single, original tweet that incorporates the given context.
       } else if (typeof imageData === "string") {
         imgTag = imageData;
       }
-      
       if (imgTag && typeof imgTag === "string") {
         const srcMatch = imgTag.match(/src="([^"]+)"/);
         if (srcMatch && srcMatch[1]) {
           setImageUrl(srcMatch[1]);
-          addTerminalLine("Image generated successfully", "success");
+          addTerminalLine("Image generation API call successful.", "success")
+          addTerminalLine("Image generated successfully", "success")
         } else {
-          addTerminalLine("Could not extract image URL from the API response", "error");
+          addTerminalLine("Could not extract image URL from the API response", "error")
         }
       } else {
-        addTerminalLine("Image API returned an unexpected structure", "error");
+        addTerminalLine("Image API returned an unexpected structure", "error")
       }
     } catch (error) {
-      console.error("Error in handleUrlSubmit:", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
-      addTerminalLine(`Error: ${errorMessage}`, "error");
+      console.error("Error in handleUrlSubmit:", error)
+      const errorMessage = error instanceof Error ? error.message : "Unknown error"
+      addTerminalLine(`Error: ${errorMessage}`, "error")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   }
 
